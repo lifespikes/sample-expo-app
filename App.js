@@ -28,6 +28,7 @@ const styles = StyleSheet.create({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
+    flex: 1,
   },
 
   header: {

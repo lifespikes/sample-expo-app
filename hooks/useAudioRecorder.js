@@ -1,11 +1,13 @@
 import {useEffect, useState} from 'react';
 import {Audio} from 'expo-av';
 
-export default function useAudioRecorder({onComplete} = {}) {
+export default function useAudioRecorder() {
   const [recording, setRecording] = useState();
+  const [isRecording, setIsRecording] = useState(false);
 
   return {
     recording,
+    isRecording,
 
     startRecording: async () => {
       await Audio.requestPermissionsAsync();
@@ -18,31 +20,27 @@ export default function useAudioRecorder({onComplete} = {}) {
         Audio.RecordingOptionsPresets.HIGH_QUALITY
       );
 
+      setIsRecording(true);
       setRecording(recording);
     },
 
     stopRecording: async () => {
-      if (recording) {
-        await recording.stopAndUnloadAsync();
-        await Audio.setAudioModeAsync({
-          allowsRecordingIOS: false
-        });
-        const result = recording.getURI();
+      if (!recording) return;
 
-        onComplete && onComplete(result);
-      }
+      await recording.stopAndUnloadAsync();
+      await Audio.setAudioModeAsync({
+        allowsRecordingIOS: false
+      });
 
-      setRecording(undefined);
+      setIsRecording(false);
     },
 
     playRecording: async () => {
       if (!recording) return;
 
-      const { sound } = await recording.createNewLoadedSoundAsync({
+      await (await recording.createNewLoadedSoundAsync({
         shouldPlay: true,
-      });
-
-      await sound.playAsync();
+      })).sound.playAsync();
     }
   };
 }

@@ -1,7 +1,7 @@
 import * as fs from 'expo-file-system';
 import {useState} from 'react';
 
-const BASE_URI = 'https://f99213f78131.ngrok.io';
+const BASE_URI = 'https://eae75b2f31ab.ngrok.io';
 
 export default function useUpload() {
   const [uploading, setUploading] = useState(false);

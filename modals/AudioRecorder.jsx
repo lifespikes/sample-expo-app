@@ -1,4 +1,4 @@
-import {Image, Modal, Pressable, Text, View} from 'react-native';
+import {Image, Modal, Pressable, Text, View, StyleSheet} from 'react-native';
 import MicrophoneIcon from '../assets/microphone.png';
 import useAudioRecorder from '../hooks/useAudioRecorder';
 import useUpload from '../hooks/useUpload.js';
@@ -8,11 +8,12 @@ import useTextMessages from '../hooks/useShare';
 import Button from '../components/Button';
 
 export default function AudioRecorder({onBack, ...rest}) {
-  const {startRecording, stopRecording, playRecording, recording} = useAudioRecorder();
   const [contactModal, setContactModal] = useState(false);
   const [uploadedFileUri, setUploadedFileUri] = useState(null);
+  const {startRecording, stopRecording, playRecording, recording, isRecording} = useAudioRecorder();
   const {uploadFile, uploading} = useUpload();
   const textMessage = useTextMessages();
+
   const buttonBg = (!recording || uploading) ? "#BDBDBD" : "#000";
 
   const shareWithContact = async () => {
@@ -46,23 +47,23 @@ export default function AudioRecorder({onBack, ...rest}) {
 
           <Image
             source={MicrophoneIcon}
-            style={{width: 150, height: 150, tintColor: recording ? '#FA5858' : null}}
+            style={{width: 150, height: 150, tintColor: isRecording ? '#FA5858' : null}}
           />
 
           <Text style={{margin: 10}}>
-            {recording ? 'Hit "Stop" to finish recording' : 'Hit "Record" to get started'}
+            {isRecording ? 'Hit "Stop" to finish recording' : 'Hit "Record" to get started'}
           </Text>
 
           <View style={styles.buttonRow}>
-            <Button bg="#FA5858" onPress={recording ? stopRecording() : startRecording()}>
-              {recording ? 'Stop' : 'Record'}
+            <Button bg="#FA5858" onPress={() => isRecording ? stopRecording() : startRecording()}>
+              {isRecording ? 'Stop' : 'Record'}
             </Button>
             <Button bg={buttonBg} onPress={playRecording}>Play</Button>
             <Button bg={buttonBg} onPress={shareWithContact}>{uploading ? 'Wait' : 'Send'}</Button>
           </View>
 
-          <Pressable style={styles.goBack} onPress={() => !recording && onBack()}>
-            <Text style={{fontWeight: 'bold', color: recording ? '#FFF' : '#000'}}>Go back</Text>
+          <Pressable style={styles.goBack} onPress={() => !isRecording && onBack()}>
+            <Text style={{fontWeight: 'bold', color: isRecording ? '#FFF' : '#000'}}>Go back</Text>
           </Pressable>
         </View>
     </Modal>
@@ -74,6 +75,7 @@ const styles = StyleSheet.create({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
+    flex: 1,
   },
 
   goBack: {marginTop: 12},

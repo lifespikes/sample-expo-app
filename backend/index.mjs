@@ -39,7 +39,7 @@ app.post('/upload', uploads.single('audio'), (req, res) => {
     }).status(400);
   }
 
-  res.send({file: `https://f99213f78131.ngrok.io/embed/${req.file.filename}`});
+  res.send({file: `https://eae75b2f31ab.ngrok.io/embed/${req.file.filename}`});
 });
 
 app.listen(3000);
