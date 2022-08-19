@@ -1,35 +1,47 @@
 import {StyleSheet, Text, View} from 'react-native';
 import {StatusBar} from 'expo-status-bar';
 import Button from './components/Button';
-import SendAudioModal from './components/SendAudioModal';
 import {useState} from 'react';
-import {centeredContainer, horizontalStack} from './helpers/styles';
+import AudioRecorder from './modals/AudioRecorder';
 
 export default function App() {
-  const [modalVisible, setModalVisible] = useState('');
-
-  const sendAudio = () => {
-    setModalVisible('audio');
-  };
-
-  const sendPicture = () => {
-
-  };
+  const [currentModal, setCurrentModal] = useState('');
 
   return (
-    <View style={centeredContainer}>
-      <SendAudioModal visible={modalVisible === 'audio'} onBack={() => setModalVisible('')} />
+    <View style={styles.container}>
+      <AudioRecorder visible={currentModal === 'audio'} onBack={() => setCurrentModal('')} />
 
-      <Text style={{fontSize: 36}}>Telegraph</Text>
-      <Text style={{fontSize: 18}}>Fast and Easy</Text>
+      <Text style={styles.header}>Telegraph</Text>
+      <Text style={styles.subHeader}>Sharing App</Text>
 
-      <View style={{marginTop: 12, ...horizontalStack}}>
-        <Button onPress={sendAudio}>Send Audio</Button>
-        <Button onPress={sendPicture}>Send Picture</Button>
+      <View style={styles.buttonRow}>
+        <Button onPress={() => setCurrentModal('audio')}>Send Audio</Button>
+        <Button onPress={() => setCurrentModal('picture')}>Send Picture</Button>
       </View>
       <StatusBar style="auto" />
     </View>
   );
 }
 
+const styles = StyleSheet.create({
+  container: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+
+  header: {
+    fontSize: 36,
+  },
+
+  subHeader: {
+    fontSize: 18,
+  },
+
+  buttonRow: {
+    marginTop: 12,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  }
+});
 

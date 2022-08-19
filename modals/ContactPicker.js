@@ -1,10 +1,10 @@
 import {useEffect, useState} from 'react';
 import * as Contacts from 'expo-contacts';
 import {Modal, Pressable, ScrollView, StyleSheet, Text, TextInput, View} from 'react-native';
-import Contact from './Contact';
 import useDebounce from '../hooks/useDebounce';
+import Contact from '../components/Contact';
 
-export default function SendToContacts({onClose, visible, onSelect} = {}) {
+export default function ContactPicker({onClose, visible, onSelect} = {}) {
   const [_contacts, _setContacts] = useState([]);
   const [contacts, setContacts] = useState([]);
   const [search, setSearch] = useState('');
@@ -16,8 +16,10 @@ export default function SendToContacts({onClose, visible, onSelect} = {}) {
         if ((await Contacts.requestPermissionsAsync()).status !== 'granted') {
           return onClose();
         }
-        _setContacts((await Contacts.getContactsAsync()).data);
-        setContacts(_contacts);
+
+        const payload = (await Contacts.getContactsAsync()).data;
+        _setContacts(payload);
+        setContacts(payload);
       }
     })();
   }, []);
